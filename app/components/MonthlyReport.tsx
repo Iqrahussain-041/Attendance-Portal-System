@@ -1,6 +1,6 @@
 'use client';
 
-import { MonthlyReport } from '@/lib/types';
+import type { MonthlyReport } from '@/lib/types';
 import AttendanceTable from './AttendanceTable';
 
 interface MonthlyReportProps {
