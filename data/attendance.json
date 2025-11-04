@@ -1,0 +1,22 @@
+{
+  "attendance": [
+    {
+      "employeeId": "emp001",
+      "date": "2025-11-04",
+      "clockIn": "02:46:14",
+      "clockOut": null,
+      "status": "present",
+      "isLate": false,
+      "isHalfDay": false
+    },
+    {
+      "employeeId": "emp003",
+      "date": "2025-11-04",
+      "clockIn": "02:50:57",
+      "clockOut": null,
+      "status": "present",
+      "isLate": false,
+      "isHalfDay": false
+    }
+  ]
+}

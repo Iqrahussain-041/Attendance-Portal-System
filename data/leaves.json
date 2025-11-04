@@ -1,0 +1,12 @@
+{
+  "leaves": [
+    {
+      "employeeId": "emp003",
+      "date": "2025-11-05",
+      "type": "half-day",
+      "reason": ".....k",
+      "status": "rejected",
+      "requestedAt": "2025-11-04T21:51:45.432Z"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "employees": [
+    {
+      "id": "emp001",
+      "name": "John Doe",
+      "uniqueLink": "john-doe",
+      "password": "password123",
+      "email": "john@company.com",
+      "designation": "Developer"
+    },
+    {
+      "id": "emp002",
+      "name": "Jane Smith",
+      "uniqueLink": "jane-smith",
+      "password": "password123",
+      "email": "jane@company.com",
+      "designation": "Designer"
+    },
+    {
+      "id": "emp003",
+      "name": "iqra",
+      "uniqueLink": "iqrah",
+      "password": "1234",
+      "email": "jhruhg@gjhb",
+      "designation": "Employee"
+    }
+  ]
+}
