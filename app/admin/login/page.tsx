@@ -10,8 +10,8 @@ export default function AdminLogin() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simple admin password - in production, this should be more secure
-    if (password === 'cadburyicon') {
+    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || '';
+    if (password === adminPassword) {
       localStorage.setItem('adminAuthenticated', 'true');
       router.push('/admin');
     } else {
