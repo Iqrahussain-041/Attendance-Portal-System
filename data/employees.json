@@ -23,6 +23,14 @@
       "password": "1234",
       "email": "jhruhg@gjhb",
       "designation": "Employee"
+    },
+    {
+      "id": "c9d0cf26-0fe8-4ad3-b750-38ebf8e3789f",
+      "name": "sami",
+      "uniqueLink": "sami",
+      "password": "12345",
+      "email": "m.samiwaseem1234@gmail.com",
+      "designation": "Employee"
     }
   ]
 }

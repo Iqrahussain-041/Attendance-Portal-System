@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getLeaves, saveLeaves } from '@/lib/dataUtils';
+import { updateLeave, getLeaves } from '@/lib/dataUtils';
 
 export async function PATCH(
   request: NextRequest,
@@ -23,25 +23,24 @@ export async function PATCH(
       );
     }
 
-    const data = getLeaves();
-    
     // params.id contains the date in format YYYY-MM-DD
-    const leaveIndex = data.leaves.findIndex(
+    const data = await getLeaves();
+    const leave = data.leaves.find(
       l => l.employeeId === employeeId && l.date === params.id
     );
 
-    if (leaveIndex === -1) {
+    if (!leave) {
       return NextResponse.json(
         { error: 'Leave not found' },
         { status: 404 }
       );
     }
 
-    data.leaves[leaveIndex].status = status;
-    saveLeaves(data);
+    await updateLeave(employeeId, params.id, { status });
 
-    return NextResponse.json(data.leaves[leaveIndex]);
+    return NextResponse.json({ ...leave, status });
   } catch (error) {
+    console.error('Error in PATCH /api/leaves/[id]:', error);
     return NextResponse.json(
       { error: 'Failed to update leave' },
       { status: 500 }

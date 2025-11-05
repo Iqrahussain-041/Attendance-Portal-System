@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getLeaves, saveLeaves, getEmployeeById } from '@/lib/dataUtils';
+import { getLeaves, addLeave, getEmployeeById } from '@/lib/dataUtils';
 import { Leave } from '@/lib/types';
-import { formatDate } from '@/lib/calculations';
+import { getDb } from '@/lib/mongodb';
 
 export async function GET(request: NextRequest) {
   try {
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const employeeId = searchParams.get('employeeId');
     const status = searchParams.get('status');
 
-    const data = getLeaves();
+    const data = await getLeaves();
 
     let leaves = data.leaves;
 
@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ leaves });
   } catch (error) {
+    console.error('Error in GET /api/leaves:', error);
     return NextResponse.json(
       { error: 'Failed to fetch leaves' },
       { status: 500 }
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const employee = getEmployeeById(employeeId);
+    const employee = await getEmployeeById(employeeId);
     if (!employee) {
       return NextResponse.json(
         { error: 'Employee not found' },
@@ -50,12 +51,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const data = getLeaves();
-
     // Check if leave already exists for this date
-    const existingLeave = data.leaves.find(
-      leave => leave.employeeId === employeeId && leave.date === date
-    );
+    const db = await getDb();
+    const existingLeave = await db.collection<Leave>('leaves').findOne({
+      employeeId,
+      date
+    });
 
     if (existingLeave) {
       return NextResponse.json(
@@ -73,11 +74,11 @@ export async function POST(request: NextRequest) {
       requestedAt: new Date().toISOString()
     };
 
-    data.leaves.push(newLeave);
-    saveLeaves(data);
+    await addLeave(newLeave);
 
     return NextResponse.json(newLeave, { status: 201 });
   } catch (error) {
+    console.error('Error in POST /api/leaves:', error);
     return NextResponse.json(
       { error: 'Failed to create leave request' },
       { status: 500 }

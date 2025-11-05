@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAttendance, saveAttendance, getEmployeeById } from '@/lib/dataUtils';
+import { getAttendance, getAttendanceByEmployeeAndDate, upsertAttendance, getEmployeeById } from '@/lib/dataUtils';
 import { formatDate, formatTime, isLate } from '@/lib/calculations';
 import { Attendance } from '@/lib/types';
 
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const employeeId = searchParams.get('employeeId');
     const date = searchParams.get('date');
 
-    const data = getAttendance();
+    const data = await getAttendance();
 
     let attendance = data.attendance;
 
@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ attendance });
   } catch (error) {
+    console.error('Error in GET /api/attendance:', error);
     return NextResponse.json(
       { error: 'Failed to fetch attendance' },
       { status: 500 }
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const employee = getEmployeeById(employeeId);
+    const employee = await getEmployeeById(employeeId);
     if (!employee) {
       return NextResponse.json(
         { error: 'Employee not found' },
@@ -50,13 +51,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const data = getAttendance();
     const today = formatDate(new Date());
     const currentTime = formatTime(new Date());
 
-    let todayAttendance = data.attendance.find(
-      att => att.employeeId === employeeId && att.date === today
-    );
+    let todayAttendance = await getAttendanceByEmployeeAndDate(employeeId, today);
 
     if (action === 'clock-in') {
       if (todayAttendance && todayAttendance.clockIn) {
@@ -78,7 +76,6 @@ export async function POST(request: NextRequest) {
           isLate: late,
           isHalfDay: false
         };
-        data.attendance.push(todayAttendance);
       } else {
         todayAttendance.clockIn = currentTime;
         todayAttendance.isLate = late;
@@ -108,9 +105,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    saveAttendance(data);
+    await upsertAttendance(todayAttendance);
     return NextResponse.json(todayAttendance);
   } catch (error) {
+    console.error('Error in POST /api/attendance:', error);
     return NextResponse.json(
       { error: 'Failed to update attendance' },
       { status: 500 }

@@ -28,17 +28,20 @@ export async function GET(request: NextRequest) {
 
     if (employeeId) {
       // Generate report for specific employee
-      const report = generateMonthlyReport(employeeId, monthNum, yearNum);
+      const report = await generateMonthlyReport(employeeId, monthNum, yearNum);
       return NextResponse.json(report);
     } else {
       // Generate reports for all employees
-      const { employees } = getEmployees();
-      const reports = employees.map(emp => 
-        generateMonthlyReport(emp.id, monthNum, yearNum)
+      const { employees } = await getEmployees();
+      const reports = await Promise.all(
+        employees.map(emp => 
+          generateMonthlyReport(emp.id, monthNum, yearNum)
+        )
       );
       return NextResponse.json({ reports });
     }
   } catch (error: any) {
+    console.error('Error in GET /api/reports:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to generate report' },
       { status: 500 }

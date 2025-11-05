@@ -25,7 +25,7 @@ A comprehensive attendance management system built with Next.js, React, TypeScri
 - **Framework**: Next.js 14 with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
-- **Data Storage**: JSON files (simple file-based storage)
+- **Data Storage**: MongoDB (MongoDB Atlas recommended)
 - **Authentication**: Simple password-based authentication
 
 ## Installation
@@ -122,10 +122,29 @@ The system comes with two sample employees:
 
 ## Data Storage
 
-All data is stored in JSON files in the `data/` directory:
-- `employees.json`: Employee information
-- `attendance.json`: All attendance records
-- `leaves.json`: Leave requests and approvals
+All data is stored in MongoDB. The application uses MongoDB collections:
+- `employees`: Employee information
+- `attendance`: All attendance records
+- `leaves`: Leave requests and approvals
+
+### MongoDB Setup
+
+1. **Create a MongoDB Atlas account** (free tier available at https://www.mongodb.com/cloud/atlas)
+
+2. **Create a cluster** and get your connection string
+
+3. **Set up environment variables:**
+   - Create a `.env.local` file in the root directory
+   - Add your MongoDB connection string:
+     ```
+     MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/attendance-portal?retryWrites=true&w=majority
+     ```
+
+4. **For Vercel deployment:**
+   - Go to your project settings in Vercel
+   - Navigate to "Environment Variables"
+   - Add `MONGODB_URI` with your MongoDB connection string
+   - Redeploy your application
 
 ## Configuration
 
@@ -180,10 +199,10 @@ npm start
 
 ## Notes
 
-- This is a simple file-based system suitable for small to medium-sized organizations
-- For production use with many employees, consider migrating to a database
+- The system now uses MongoDB for data storage (works on Vercel and other serverless platforms)
 - Passwords are stored in plain text - implement encryption for production
 - Admin authentication uses localStorage - implement proper session management for production
+- Make sure to set the `MONGODB_URI` environment variable before deploying
 
 ## License
 

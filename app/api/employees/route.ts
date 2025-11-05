@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getEmployees, saveEmployees, getEmployeeByLink } from '@/lib/dataUtils';
+import { getEmployees, addEmployee, getEmployeeByLink } from '@/lib/dataUtils';
+import { v4 as uuidv4 } from 'uuid';
 import { Employee } from '@/lib/types';
 
 export async function GET() {
   try {
-    const data = getEmployees();
+    const data = await getEmployees();
     return NextResponse.json(data);
   } catch (error) {
+    console.error('Error in GET /api/employees:', error);
     return NextResponse.json(
       { error: 'Failed to fetch employees' },
       { status: 500 }
@@ -26,7 +28,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const existing = getEmployeeByLink(uniqueLink);
+    const existing = await getEmployeeByLink(uniqueLink);
     if (existing) {
       return NextResponse.json(
         { error: 'Employee with this link already exists' },
@@ -34,9 +36,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const data = getEmployees();
     const newEmployee: Employee = {
-      id: `emp${String(data.employees.length + 1).padStart(3, '0')}`,
+      id: uuidv4(),
       name,
       uniqueLink,
       password,
@@ -44,11 +45,11 @@ export async function POST(request: NextRequest) {
       designation: designation || 'Employee'
     };
 
-    data.employees.push(newEmployee);
-    saveEmployees(data);
+    await addEmployee(newEmployee);
 
     return NextResponse.json(newEmployee, { status: 201 });
   } catch (error) {
+    console.error('Error in POST /api/employees:', error);
     return NextResponse.json(
       { error: 'Failed to create employee' },
       { status: 500 }

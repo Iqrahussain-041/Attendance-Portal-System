@@ -35,10 +35,10 @@ export function calculateHours(clockIn: string, clockOut: string): number {
 }
 
 // Generate monthly report for an employee
-export function generateMonthlyReport(employeeId: string, month: number, year: number): MonthlyReport {
-  const { attendance } = getAttendance();
-  const { leaves } = getLeaves();
-  const employee = getEmployeeById(employeeId);
+export async function generateMonthlyReport(employeeId: string, month: number, year: number): Promise<MonthlyReport> {
+  const { attendance } = await getAttendance();
+  const { leaves } = await getLeaves();
+  const employee = await getEmployeeById(employeeId);
   
   if (!employee) {
     throw new Error('Employee not found');
@@ -90,9 +90,9 @@ export function generateMonthlyReport(employeeId: string, month: number, year: n
 }
 
 // Get current status of an employee (clocked in or out)
-export function getCurrentStatus(employeeId: string): { isClockedIn: boolean; attendance: Attendance | null } {
+export async function getCurrentStatus(employeeId: string): Promise<{ isClockedIn: boolean; attendance: Attendance | null }> {
   const today = formatDate(new Date());
-  const { attendance } = getAttendance();
+  const { attendance } = await getAttendance();
   
   const todayAttendance = attendance.find(att => 
     att.employeeId === employeeId && 
