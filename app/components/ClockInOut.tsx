@@ -102,6 +102,32 @@ export default function ClockInOut({ employee, onUpdate }: ClockInOutProps) {
     return time;
   };
 
+  const canClockIn = () => {
+    if (!employee.jobStartTime) return false;
+    const now = new Date();
+    const jobStart = new Date();
+    const [hours, minutes] = employee.jobStartTime.split(':');
+    jobStart.setHours(parseInt(hours, 10));
+    jobStart.setMinutes(parseInt(minutes, 10) - 5);
+    return now >= jobStart;
+  };
+
+  const canClockOut = () => {
+    const now = new Date();
+    const midnight = new Date();
+    midnight.setHours(24, 0, 0, 0);
+    return now < midnight;
+  };
+
+  useEffect(() => {
+    const autoClockOut = () => {
+      if (isClockedIn && !canClockOut()) {
+        handleClockOut();
+      }
+    };
+    autoClockOut();
+  }, [currentTime]);
+
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">Clock In/Out</h2>
@@ -145,7 +171,7 @@ export default function ClockInOut({ employee, onUpdate }: ClockInOutProps) {
         {!isClockedIn ? (
           <button
             onClick={handleClockIn}
-            disabled={loading}
+            disabled={loading || !canClockIn()}
             className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Processing...' : 'Clock In'}
@@ -153,7 +179,7 @@ export default function ClockInOut({ employee, onUpdate }: ClockInOutProps) {
         ) : (
           <button
             onClick={handleClockOut}
-            disabled={loading}
+            disabled={loading || !canClockOut()}
             className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Processing...' : 'Clock Out'}

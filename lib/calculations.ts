@@ -1,15 +1,17 @@
 import { Attendance, Leave, MonthlyReport } from './types';
 import { getAttendance, getLeaves, getEmployeeById } from './dataUtils';
 
-const STANDARD_START_TIME = '09:00:00';
+// Shift timings: 6:00 PM to 11:00 PM
+const STANDARD_START_TIME = '18:00:00'; // 6:00 PM
+const LATE_THRESHOLD_TIME = '18:20:00'; // 6:20 PM
 
-// Check if time is late (after 9:00 AM)
+// Check if time is late (after 6:20 PM)
 export function isLate(clockInTime: string): boolean {
   const [hours, minutes] = clockInTime.split(':').map(Number);
-  const [stdHours, stdMinutes] = STANDARD_START_TIME.split(':').map(Number);
+  const [thresholdHours, thresholdMinutes] = LATE_THRESHOLD_TIME.split(':').map(Number);
   
-  if (hours > stdHours) return true;
-  if (hours === stdHours && minutes > stdMinutes) return true;
+  if (hours > thresholdHours) return true;
+  if (hours === thresholdHours && minutes > thresholdMinutes) return true;
   return false;
 }
 

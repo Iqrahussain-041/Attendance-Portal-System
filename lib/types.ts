@@ -5,6 +5,8 @@ export interface Employee {
   password: string;
   email: string;
   designation: string;
+  jobStartTime: string;
+  jobEndTime: string;
 }
 
 export interface Attendance {

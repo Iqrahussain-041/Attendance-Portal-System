@@ -6,7 +6,9 @@
       "uniqueLink": "john-doe",
       "password": "password123",
       "email": "john@company.com",
-      "designation": "Developer"
+      "designation": "Developer",
+      "jobStartTime": "17:00",
+      "jobEndTime": "23:00"
     },
     {
       "id": "emp002",
@@ -14,7 +16,9 @@
       "uniqueLink": "jane-smith",
       "password": "password123",
       "email": "jane@company.com",
-      "designation": "Designer"
+      "designation": "Designer",
+      "jobStartTime": "17:00",
+      "jobEndTime": "23:00"
     },
     {
       "id": "emp003",
@@ -22,7 +26,9 @@
       "uniqueLink": "iqrah",
       "password": "1234",
       "email": "jhruhg@gjhb",
-      "designation": "Employee"
+      "designation": "Employee",
+      "jobStartTime": "17:00",
+      "jobEndTime": "23:00"
     },
     {
       "id": "c9d0cf26-0fe8-4ad3-b750-38ebf8e3789f",
@@ -30,7 +36,9 @@
       "uniqueLink": "sami",
       "password": "12345",
       "email": "m.samiwaseem1234@gmail.com",
-      "designation": "Employee"
+      "designation": "Employee",
+      "jobStartTime": "17:00",
+      "jobEndTime": "23:00"
     }
   ]
 }
