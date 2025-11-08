@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateMonthlyReport } from '@/lib/calculations';
 import { getEmployees } from '@/lib/dataUtils';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = request.nextUrl;
     const employeeId = searchParams.get('employeeId');
     const month = searchParams.get('month');
     const year = searchParams.get('year');

@@ -19,9 +19,9 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, uniqueLink, password, email, designation } = body;
+    const { name, uniqueLink, password, email, designation, jobStartTime, jobEndTime } = body;
 
-    if (!name || !uniqueLink || !password || !email) {
+    if (!name || !uniqueLink || !password || !email || !jobStartTime || !jobEndTime) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -42,7 +42,9 @@ export async function POST(request: NextRequest) {
       uniqueLink,
       password,
       email,
-      designation: designation || 'Employee'
+      designation: designation || 'Employee',
+      jobStartTime,
+      jobEndTime
     };
 
     await addEmployee(newEmployee);
