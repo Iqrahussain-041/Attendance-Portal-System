@@ -116,21 +116,21 @@ export default function EmployeeAttendancePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl text-gray-600">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="text-xl text-gray-300">Loading...</div>
       </div>
     );
   }
 
   if (!employee) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Employee Not Found</h2>
-          <p className="text-gray-600 mb-4">
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="bg-gray-800 rounded-lg shadow-lg p-8 max-w-md w-full">
+          <h2 className="text-2xl font-bold text-red-400 mb-4">Employee Not Found</h2>
+          <p className="text-gray-300 mb-4">
             The employee link you're trying to access doesn't exist.
           </p>
-          <a href="/" className="text-primary-600 hover:underline">
+          <a href="/" className="text-primary-400 hover:underline">
             ← Back to Home
           </a>
         </div>
@@ -140,18 +140,18 @@ export default function EmployeeAttendancePage() {
 
   if (!authenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="bg-gray-800 rounded-lg shadow-lg p-8 max-w-md w-full">
+          <h2 className="text-2xl font-bold text-gray-100 mb-4">
             Employee Login - {employee.name}
           </h2>
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+            <div className="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
               {error}
             </div>
           )}
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label className="block text-gray-300 text-sm font-bold mb-2">
               Password
             </label>
             <input
@@ -159,7 +159,7 @@ export default function EmployeeAttendancePage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
               placeholder="Enter your password"
             />
           </div>
@@ -169,7 +169,7 @@ export default function EmployeeAttendancePage() {
           >
             Login
           </button>
-          <a href="/" className="block text-center mt-4 text-primary-600 hover:underline">
+          <a href="/" className="block text-center mt-4 text-primary-400 hover:underline">
             ← Back to Home
           </a>
         </div>
@@ -186,17 +186,17 @@ export default function EmployeeAttendancePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8">
+    <div className="min-h-screen bg-gray-900 py-8">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">{employee.name}</h1>
-              <p className="text-gray-600">{employee.designation}</p>
+              <h1 className="text-3xl font-bold text-gray-100">{employee.name}</h1>
+              <p className="text-gray-300">{employee.designation}</p>
             </div>
             <button
               onClick={() => setAuthenticated(false)}
-              className="text-gray-600 hover:text-gray-800"
+              className="text-gray-400 hover:text-gray-200"
             >
               Logout
             </button>

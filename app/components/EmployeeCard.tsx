@@ -43,12 +43,12 @@ export default function EmployeeCard({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
+  <div className="bg-gray-900 rounded-lg shadow-md p-6 hover:shadow-lg transition text-gray-100">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h3 className="text-xl font-bold text-gray-800">{employee.name}</h3>
-          <p className="text-gray-600">{employee.designation}</p>
-          <p className="text-sm text-gray-500">{employee.email}</p>
+          <h3 className="text-xl font-bold text-gray-100">{employee.name}</h3>
+          <p className="text-gray-300">{employee.designation}</p>
+          <p className="text-sm text-gray-400">{employee.email}</p>
         </div>
         {currentStatus && (
           <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor()}`}>
@@ -58,10 +58,10 @@ export default function EmployeeCard({
       </div>
 
       <div className="border-t pt-4 mt-4">
-        <div className="text-sm text-gray-600 mb-2">
+  <div className="text-sm text-gray-300 mb-2">
           <strong>Unique Link:</strong>
         </div>
-        <div className="bg-gray-50 p-2 rounded text-xs font-mono break-all">
+  <div className="bg-gray-800 p-2 rounded text-xs font-mono break-all text-gray-200">
           /attendance/{employee.uniqueLink}
         </div>
       </div>

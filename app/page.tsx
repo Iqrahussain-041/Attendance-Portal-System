@@ -2,13 +2,13 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
+      <div className="max-w-md w-full bg-gray-800 rounded-2xl shadow-xl p-8">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+          <h1 className="text-4xl font-bold text-gray-100 mb-2">
             Attendance Portal
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-300">
             Manage your attendance and track your work hours
           </p>
         </div>
@@ -28,8 +28,8 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <p className="text-sm text-center text-gray-500">
+        <div className="mt-8 pt-6 border-t border-gray-700">
+          <p className="text-sm text-center text-gray-400">
             Use your unique employee link to access your attendance page
           </p>
         </div>

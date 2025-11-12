@@ -40,11 +40,11 @@ export default function ReportsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-lg mb-6">
+    <div className="min-h-screen bg-gray-900">
+      <nav className="bg-gray-800 shadow-lg mb-6">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center py-4">
-            <h1 className="text-2xl font-bold text-gray-800">Monthly Reports</h1>
+            <h1 className="text-2xl font-bold text-gray-100">Monthly Reports</h1>
             <div className="flex gap-4">
               <button
                 onClick={() => router.push('/admin')}
@@ -58,15 +58,15 @@ export default function ReportsPage() {
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 pb-8">
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Select Month and Year</h2>
+        <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+          <h2 className="text-xl font-bold text-gray-100 mb-4">Select Month and Year</h2>
           <div className="flex gap-4">
             <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">Month</label>
+              <label className="block text-gray-300 text-sm font-bold mb-2">Month</label>
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
                   <option key={month} value={month}>
@@ -76,23 +76,23 @@ export default function ReportsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">Year</label>
+              <label className="block text-gray-300 text-sm font-bold mb-2">Year</label>
               <input
                 type="number"
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(parseInt(e.target.value))}
                 min="2000"
                 max="2100"
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
           </div>
         </div>
 
         {loading ? (
-          <div className="text-center py-8 text-gray-600">Loading reports...</div>
+          <div className="text-center py-8 text-gray-400">Loading reports...</div>
         ) : reports.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">No reports available for this month</div>
+          <div className="text-center py-8 text-gray-400">No reports available for this month</div>
         ) : (
           <div className="space-y-6">
             {reports.map((report) => (

@@ -39,6 +39,16 @@
       "designation": "Employee",
       "jobStartTime": "17:00",
       "jobEndTime": "23:00"
+    },
+    {
+      "id": "emp004",
+      "name": "Ahmed Ali",
+      "uniqueLink": "ahmed-ali",
+      "password": "demo123",
+      "email": "ahmed@company.com",
+      "designation": "Manager",
+      "jobStartTime": "21:00",
+      "jobEndTime": "09:00"
     }
   ]
 }

@@ -122,7 +122,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl text-gray-600">Loading...</div>
+        <div className="text-xl text-gray-300">Loading...</div>
       </div>
     );
   }
@@ -133,11 +133,11 @@ export default function AdminDashboard() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-lg mb-6">
+    <div className="min-h-screen bg-gray-900">
+      <nav className="bg-gray-800 shadow-lg mb-6">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center py-4">
-            <h1 className="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+            <h1 className="text-2xl font-bold text-gray-100">Admin Dashboard</h1>
             <div className="flex gap-4">
               <Link
                 href="/admin/reports"
@@ -159,34 +159,34 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto px-4 pb-8">
         {/* Today's Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-sm text-gray-600 font-medium mb-1">Total Employees</div>
-            <div className="text-3xl font-bold text-gray-800">{employees.length}</div>
+          <div className="bg-gray-800 rounded-lg shadow p-6 text-gray-100">
+            <div className="text-sm text-gray-300 font-medium mb-1">Total Employees</div>
+            <div className="text-3xl font-bold text-gray-200">{employees.length}</div>
           </div>
-          <div className="bg-green-50 border border-green-200 rounded-lg shadow p-6">
-            <div className="text-sm text-green-600 font-medium mb-1">Clocked In Today</div>
-            <div className="text-3xl font-bold text-green-700">
+          <div className="bg-green-900 border border-green-700 rounded-lg shadow p-6">
+            <div className="text-sm text-green-300 font-medium mb-1">Clocked In Today</div>
+            <div className="text-3xl font-bold text-green-200">
               {todayAttendance.filter(att => att.clockIn && !att.clockOut).length}
             </div>
           </div>
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg shadow p-6">
-            <div className="text-sm text-yellow-600 font-medium mb-1">Pending Leaves</div>
-            <div className="text-3xl font-bold text-yellow-700">{pendingLeaves.length}</div>
+          <div className="bg-yellow-900 border border-yellow-700 rounded-lg shadow p-6">
+            <div className="text-sm text-yellow-300 font-medium mb-1">Pending Leaves</div>
+            <div className="text-3xl font-bold text-yellow-200">{pendingLeaves.length}</div>
           </div>
         </div>
 
         {/* Pending Leaves */}
         {pendingLeaves.length > 0 && (
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Pending Leave Requests</h2>
+          <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+            <h2 className="text-2xl font-bold text-gray-100 mb-4">Pending Leave Requests</h2>
             <div className="space-y-3">
               {pendingLeaves.map((leave, index) => {
                 const employee = employees.find(e => e.id === leave.employeeId);
                 return (
-                  <div key={index} className="p-4 bg-gray-50 rounded-lg flex justify-between items-center">
+                  <div key={index} className="p-4 bg-gray-700 rounded-lg flex justify-between items-center">
                     <div>
-                      <div className="font-semibold">{employee?.name || leave.employeeId}</div>
-                      <div className="text-sm text-gray-600">
+                      <div className="font-semibold text-gray-100">{employee?.name || leave.employeeId}</div>
+                      <div className="text-sm text-gray-300">
                         {new Date(leave.date).toLocaleDateString()} - {leave.type} - {leave.reason}
                       </div>
                     </div>
@@ -244,9 +244,9 @@ export default function AdminDashboard() {
         )}
 
         {/* Add Employee */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-gray-800">Employees</h2>
+            <h2 className="text-2xl font-bold text-gray-100">Employees</h2>
             <button
               onClick={() => setShowAddForm(!showAddForm)}
               className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded transition"
@@ -256,56 +256,56 @@ export default function AdminDashboard() {
           </div>
 
           {showAddForm && (
-            <form onSubmit={handleAddEmployee} className="mb-6 p-4 bg-gray-50 rounded-lg">
+            <form onSubmit={handleAddEmployee} className="mb-6 p-4 bg-gray-700 rounded-lg">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2">Name</label>
+                  <label className="block text-gray-300 text-sm font-bold mb-2">Name</label>
                   <input
                     type="text"
                     value={employeeForm.name}
                     onChange={(e) => setEmployeeForm({ ...employeeForm, name: e.target.value })}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-600 text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder-gray-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2">Unique Link</label>
+                  <label className="block text-gray-300 text-sm font-bold mb-2">Unique Link</label>
                   <input
                     type="text"
                     value={employeeForm.uniqueLink}
                     onChange={(e) => setEmployeeForm({ ...employeeForm, uniqueLink: e.target.value })}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-600 text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder-gray-400"
                     placeholder="e.g., john-doe"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                  <label className="block text-gray-300 text-sm font-bold mb-2">Email</label>
                   <input
                     type="email"
                     value={employeeForm.email}
                     onChange={(e) => setEmployeeForm({ ...employeeForm, email: e.target.value })}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-600 text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder-gray-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                  <label className="block text-gray-300 text-sm font-bold mb-2">Password</label>
                   <input
                     type="password"
                     value={employeeForm.password}
                     onChange={(e) => setEmployeeForm({ ...employeeForm, password: e.target.value })}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-600 text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder-gray-400"
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-gray-700 text-sm font-bold mb-2">Designation</label>
+                  <label className="block text-gray-300 text-sm font-bold mb-2">Designation</label>
                   <input
                     type="text"
                     value={employeeForm.designation}
                     onChange={(e) => setEmployeeForm({ ...employeeForm, designation: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-600 text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder-gray-400"
                     placeholder="e.g., Developer, Designer"
                   />
                 </div>
@@ -334,7 +334,7 @@ export default function AdminDashboard() {
 
         {/* Today's Attendance */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Today's Attendance</h2>
+          <h2 className="text-2xl font-bold text-gray-100 mb-4">Today's Attendance</h2>
           <AttendanceTable attendance={todayAttendance} employeeNames={employeeNames} />
         </div>
       </div>

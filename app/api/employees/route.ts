@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { name, uniqueLink, password, email, designation, jobStartTime, jobEndTime } = body;
 
-    if (!name || !uniqueLink || !password || !email || !jobStartTime || !jobEndTime) {
+    if (!name || !uniqueLink || !password || !email) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -43,8 +43,8 @@ export async function POST(request: NextRequest) {
       password,
       email,
       designation: designation || 'Employee',
-      jobStartTime,
-      jobEndTime
+      jobStartTime: jobStartTime || '21:00',
+      jobEndTime: jobEndTime || '09:00'
     };
 
     await addEmployee(newEmployee);

@@ -79,26 +79,26 @@ export default function EmployeeDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl text-gray-600">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="text-xl text-gray-300">Loading...</div>
       </div>
     );
   }
 
   if (!employee) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl text-red-600">Employee not found</div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="text-xl text-red-400">Employee not found</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-lg mb-6">
+    <div className="min-h-screen bg-gray-900">
+      <nav className="bg-gray-800 shadow-lg mb-6">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center py-4">
-            <h1 className="text-2xl font-bold text-gray-800">{employee.name} - Details</h1>
+            <h1 className="text-2xl font-bold text-gray-100">{employee.name} - Details</h1>
             <button
               onClick={() => router.back()}
               className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded transition"
@@ -110,30 +110,30 @@ export default function EmployeeDetailPage() {
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 pb-8">
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-2">{employee.name}</h2>
-          <p className="text-gray-600">{employee.designation}</p>
-          <p className="text-sm text-gray-500 mt-1">{employee.email}</p>
+        <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+          <h2 className="text-xl font-bold text-gray-100 mb-2">{employee.name}</h2>
+          <p className="text-gray-300">{employee.designation}</p>
+          <p className="text-sm text-gray-400 mt-1">{employee.email}</p>
           <div className="mt-4">
-            <div className="text-sm text-gray-600 mb-1">
+            <div className="text-sm text-gray-300 mb-1">
               <strong>Unique Link:</strong>
             </div>
-            <div className="bg-gray-50 p-2 rounded text-xs font-mono">
+            <div className="bg-gray-700 p-2 rounded text-xs font-mono text-gray-200">
               /attendance/{employee.uniqueLink}
             </div>
           </div>
         </div>
 
         {/* Monthly Report Selector */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Monthly Report</h2>
+        <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+          <h2 className="text-2xl font-bold text-gray-100 mb-4">Monthly Report</h2>
           <div className="flex gap-4 mb-4">
             <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">Month</label>
+              <label className="block text-gray-300 text-sm font-bold mb-2">Month</label>
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
                   <option key={month} value={month}>
@@ -143,30 +143,30 @@ export default function EmployeeDetailPage() {
               </select>
             </div>
             <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">Year</label>
+              <label className="block text-gray-300 text-sm font-bold mb-2">Year</label>
               <input
                 type="number"
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(parseInt(e.target.value))}
                 min="2000"
                 max="2100"
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
           </div>
 
           {loadingReport ? (
-            <div className="text-center py-8 text-gray-600">Loading report...</div>
+            <div className="text-center py-8 text-gray-400">Loading report...</div>
           ) : monthlyReport ? (
             <MonthlyReport report={monthlyReport} />
           ) : (
-            <div className="text-center py-8 text-gray-500">No data available for this month</div>
+            <div className="text-center py-8 text-gray-400">No data available for this month</div>
           )}
         </div>
 
         {/* Full Attendance History */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Full Attendance History</h2>
+          <h2 className="text-2xl font-bold text-gray-100 mb-4">Full Attendance History</h2>
           <AttendanceTable attendance={attendance.slice().reverse()} />
         </div>
       </div>

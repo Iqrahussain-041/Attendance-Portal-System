@@ -70,6 +70,16 @@ export default function ClockInOut({ employee, onUpdate }: ClockInOutProps) {
   };
 
   const handleClockOut = async () => {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    
+    // If after 10:00 AM, don't allow manual check out
+    if (hours > 10 || (hours === 10 && minutes > 0)) {
+      setError('Check Out expired. Available only until 10:00 AM.');
+      return;
+    }
+    
     setLoading(true);
     setError(null);
     try {
@@ -103,40 +113,56 @@ export default function ClockInOut({ employee, onUpdate }: ClockInOutProps) {
   };
 
   const canClockIn = () => {
-    if (!employee.jobStartTime) return false;
     const now = new Date();
-    const jobStart = new Date();
-    const [hours, minutes] = employee.jobStartTime.split(':');
-    jobStart.setHours(parseInt(hours, 10));
-    jobStart.setMinutes(parseInt(minutes, 10) - 5);
-    return now >= jobStart;
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    
+    // Check in available from 9 PM (21:00) to 11:55 PM (23:55)
+    if (hours === 21) return true;  // 9 PM hour
+    if (hours === 22) return true;  // 10 PM hour
+    if (hours === 23 && minutes < 56) return true; // Up to 11:55 PM
+    return false; // After 11:55 PM and before 9 PM - disabled
   };
 
   const canClockOut = () => {
     const now = new Date();
-    const midnight = new Date();
-    midnight.setHours(24, 0, 0, 0);
-    return now < midnight;
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    
+    // Can check out from 9 PM to 10:00 AM exactly
+    if (hours >= 21) return true;  // 9 PM onwards
+    if (hours < 10) return true;    // Before 10 AM
+    if (hours === 10 && minutes === 0) return true; // Exactly 10:00 AM
+    return false; // After 10:00 AM, button becomes inactive
   };
 
+  // Auto logout at 10:01 AM (without saving)
   useEffect(() => {
-    const autoClockOut = () => {
-      if (isClockedIn && !canClockOut()) {
-        handleClockOut();
+    const checkAutoLogout = () => {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      
+      if ((hours === 10 && minutes >= 1) || hours > 10) {
+        if (isClockedIn) {
+          setIsClockedIn(false);
+        }
       }
     };
-    autoClockOut();
-  }, [currentTime]);
+    
+    const timer = setInterval(checkAutoLogout, 60000);
+    return () => clearInterval(timer);
+  }, [isClockedIn]);
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">Clock In/Out</h2>
+    <div className="bg-gray-900 rounded-lg shadow-lg p-6 mb-6 text-gray-100">
+      <h2 className="text-2xl font-bold text-gray-100 mb-4">Check In/Out</h2>
       
       <div className="text-center mb-6">
         <div className="text-4xl font-mono font-bold text-primary-600 mb-2">
           {currentTime.toLocaleTimeString()}
         </div>
-        <div className="text-lg text-gray-600">
+        <div className="text-lg text-gray-300">
           {currentTime.toLocaleDateString('en-US', {
             weekday: 'long',
             year: 'numeric',
@@ -147,21 +173,21 @@ export default function ClockInOut({ employee, onUpdate }: ClockInOutProps) {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+        <div className="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
           {error}
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="bg-gray-50 p-4 rounded">
-          <div className="text-sm text-gray-600 mb-1">Clock In Time</div>
-          <div className="text-xl font-semibold text-gray-800">
+        <div className="bg-gray-700 p-4 rounded">
+          <div className="text-sm text-gray-300 mb-1">Check In Time</div>
+          <div className="text-xl font-semibold text-gray-100">
             {formatTime(clockInTime)}
           </div>
         </div>
-        <div className="bg-gray-50 p-4 rounded">
-          <div className="text-sm text-gray-600 mb-1">Clock Out Time</div>
-          <div className="text-xl font-semibold text-gray-800">
+        <div className="bg-gray-700 p-4 rounded">
+          <div className="text-sm text-gray-300 mb-1">Check Out Time</div>
+          <div className="text-xl font-semibold text-gray-100">
             {formatTime(clockOutTime)}
           </div>
         </div>
@@ -174,7 +200,7 @@ export default function ClockInOut({ employee, onUpdate }: ClockInOutProps) {
             disabled={loading || !canClockIn()}
             className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Processing...' : 'Clock In'}
+            {loading ? 'Processing...' : 'Check In'}
           </button>
         ) : (
           <button
@@ -182,7 +208,7 @@ export default function ClockInOut({ employee, onUpdate }: ClockInOutProps) {
             disabled={loading || !canClockOut()}
             className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Processing...' : 'Clock Out'}
+            {loading ? 'Processing...' : 'Check Out'}
           </button>
         )}
       </div>
@@ -190,7 +216,7 @@ export default function ClockInOut({ employee, onUpdate }: ClockInOutProps) {
       {isClockedIn && (
         <div className="mt-4 text-center">
           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-            Currently Clocked In
+            Currently Checked In
           </span>
         </div>
       )}
