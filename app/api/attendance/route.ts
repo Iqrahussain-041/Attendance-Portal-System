@@ -53,10 +53,31 @@ export async function POST(request: NextRequest) {
 
     const today = formatDate(new Date());
     const currentTime = formatTime(new Date());
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
 
     let todayAttendance = await getAttendanceByEmployeeAndDate(employeeId, today);
 
     if (action === 'clock-in') {
+      // RULE: Clock-in window is 21:00 to 22:00 only
+      if (hours < 21 || hours > 22 || (hours === 22 && minutes > 0)) {
+        const absentRecord: Attendance = {
+          employeeId,
+          date: today,
+          clockIn: null,
+          clockOut: null,
+          status: 'absent',
+          isLate: false,
+          isHalfDay: false
+        };
+        await upsertAttendance(absentRecord);
+        return NextResponse.json(
+          { error: 'Clock-in window closed (21:00-22:00). Marked as absent for today.' },
+          { status: 400 }
+        );
+      }
+
       if (todayAttendance && todayAttendance.clockIn) {
         return NextResponse.json(
           { error: 'Already clocked in today' },
@@ -82,22 +103,41 @@ export async function POST(request: NextRequest) {
         todayAttendance.status = 'present';
       }
     } else if (action === 'clock-out') {
-      if (!todayAttendance || !todayAttendance.clockIn) {
+      // Try to find today's record first
+      let attendanceRecord = await getAttendanceByEmployeeAndDate(employeeId, today);
+      // If not found today, check yesterday (for overnight shift)
+      if (!attendanceRecord) {
+        const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const yesterdayDate = formatDate(yesterday);
+        attendanceRecord = await getAttendanceByEmployeeAndDate(employeeId, yesterdayDate);
+      }
+
+      if (!attendanceRecord || !attendanceRecord.clockIn) {
         return NextResponse.json(
           { error: 'Please clock in first' },
           { status: 400 }
         );
       }
 
-      if (todayAttendance.clockOut) {
+      if (attendanceRecord.clockOut) {
         return NextResponse.json(
-          { error: 'Already clocked out today' },
+          { error: 'Already clocked out' },
           { status: 400 }
         );
       }
 
-      todayAttendance.clockOut = currentTime;
-      todayAttendance.status = 'present';
+      attendanceRecord.clockOut = currentTime;
+      // RULE: If clock-out is before 09:00, mark as half-day
+      const [outHours] = currentTime.split(':').map(Number);
+      if (outHours < 9) {
+        attendanceRecord.isHalfDay = true;
+        attendanceRecord.status = 'half-day';
+      } else {
+        attendanceRecord.isHalfDay = false;
+        attendanceRecord.status = 'present';
+      }
+
+      todayAttendance = attendanceRecord;
     } else {
       return NextResponse.json(
         { error: 'Invalid action' },

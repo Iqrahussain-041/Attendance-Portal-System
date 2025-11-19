@@ -9,9 +9,11 @@ const LATE_THRESHOLD_TIME = '21:20:00'; // 9:20 PM
 export function isLate(clockInTime: string): boolean {
   const [hours, minutes] = clockInTime.split(':').map(Number);
   const [thresholdHours, thresholdMinutes] = LATE_THRESHOLD_TIME.split(':').map(Number);
-  
-  if (hours > thresholdHours) return true;
-  if (hours === thresholdHours && minutes > thresholdMinutes) return true;
+  // For night shift (21:00 to 09:00): late if after 21:20 PM
+  // Times before 09:00 AM are considered on-time for next day
+  if (hours > thresholdHours || (hours === thresholdHours && minutes >= thresholdMinutes)) {
+    return true;
+  }
   return false;
 }
 
@@ -29,10 +31,12 @@ export function formatDate(date: Date): string {
 export function calculateHours(clockIn: string, clockOut: string): number {
   const [inHours, inMinutes] = clockIn.split(':').map(Number);
   const [outHours, outMinutes] = clockOut.split(':').map(Number);
-  
-  const inTotalMinutes = inHours * 60 + inMinutes;
-  const outTotalMinutes = outHours * 60 + outMinutes;
-  
+  let inTotalMinutes = inHours * 60 + inMinutes;
+  let outTotalMinutes = outHours * 60 + outMinutes;
+  // If clock out is earlier than clock in (crossed midnight)
+  if (outTotalMinutes < inTotalMinutes) {
+    outTotalMinutes += 24 * 60; // Add 24 hours
+  }
   return (outTotalMinutes - inTotalMinutes) / 60;
 }
 

@@ -41,7 +41,28 @@ export default function ClockInOut({ employee, onUpdate }: ClockInOutProps) {
     }
   };
 
+  const canClockIn = () => {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    
+    // Allow clock-in from 21:00 to 22:00 inclusive
+    if (hours === 21) return true;
+    if (hours === 22 && minutes === 0) return true;
+    return false;
+  };
+
   const handleClockIn = async () => {
+    // Client-side validation: clock-in only between 21:00 and 22:00
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    
+    if (hours < 21 || hours > 22 || (hours === 22 && minutes > 0)) {
+      setError('Clock-in allowed only between 21:00 and 22:00.');
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -69,14 +90,25 @@ export default function ClockInOut({ employee, onUpdate }: ClockInOutProps) {
     }
   };
 
+  const canClockOut = () => {
+    const now = new Date();
+    const hours = now.getHours();
+    
+    if (hours >= 21) return true;
+    if (hours < 10) return true;
+    if (hours === 10 && now.getMinutes() === 0) return true;
+    return false;
+  };
+
   const handleClockOut = async () => {
     const now = new Date();
     const hours = now.getHours();
     const minutes = now.getMinutes();
     
-    // If after 10:00 AM, don't allow manual check out
-    if (hours > 10 || (hours === 10 && minutes > 0)) {
-      setError('Check Out expired. Available only until 10:00 AM.');
+    // Check if clock-out is within allowed window (21:00 to 10:00 AM)
+    const isWithinWindow = (hours >= 21) || (hours < 10) || (hours === 10 && minutes === 0);
+    if (!isWithinWindow) {
+      setError('Clock-out expired. Available only until 10:00 AM.');
       return;
     }
     
@@ -112,47 +144,32 @@ export default function ClockInOut({ employee, onUpdate }: ClockInOutProps) {
     return time;
   };
 
-  const canClockIn = () => {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    
-    // Check in available from 9 PM (21:00) to 11:55 PM (23:55)
-    if (hours === 21) return true;  // 9 PM hour
-    if (hours === 22) return true;  // 10 PM hour
-    if (hours === 23 && minutes < 56) return true; // Up to 11:55 PM
-    return false; // After 11:55 PM and before 9 PM - disabled
-  };
-
-  const canClockOut = () => {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    
-    // Can check out from 9 PM to 10:00 AM exactly
-    if (hours >= 21) return true;  // 9 PM onwards
-    if (hours < 10) return true;    // Before 10 AM
-    if (hours === 10 && minutes === 0) return true; // Exactly 10:00 AM
-    return false; // After 10:00 AM, button becomes inactive
-  };
-
-  // Auto logout at 10:01 AM (without saving)
   useEffect(() => {
-    const checkAutoLogout = () => {
+    const checkAutoLogout = async () => {
       const now = new Date();
       const hours = now.getHours();
       const minutes = now.getMinutes();
       
-      if ((hours === 10 && minutes >= 1) || hours > 10) {
-        if (isClockedIn) {
+      if ((hours === 10 && minutes === 0) && isClockedIn) {
+        try {
+          await fetch('/api/attendance', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              employeeId: employee.id,
+              action: 'clock-out'
+            })
+          });
           setIsClockedIn(false);
+        } catch (err) {
+          console.error('Auto logout failed:', err);
         }
       }
     };
     
     const timer = setInterval(checkAutoLogout, 60000);
     return () => clearInterval(timer);
-  }, [isClockedIn]);
+  }, [isClockedIn, employee.id]);
 
   return (
     <div className="bg-gray-900 rounded-lg shadow-lg p-6 mb-6 text-gray-100">

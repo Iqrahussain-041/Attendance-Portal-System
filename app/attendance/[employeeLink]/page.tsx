@@ -178,11 +178,11 @@ export default function EmployeeAttendancePage() {
   }
 
   const stats = {
-    totalPresent: attendance.filter(a => a.status === 'present' && a.clockIn && a.clockOut).length,
+    totalPresent: attendance.filter(a => a.status === 'present' && a.clockIn && a.clockOut && !a.isHalfDay).length,
     totalLeaves: leaves.filter(l => l.status === 'approved' && l.type === 'full-day').length,
     totalHalfDays: attendance.filter(a => a.isHalfDay || a.status === 'half-day').length +
                    leaves.filter(l => l.status === 'approved' && l.type === 'half-day').length,
-    totalLate: attendance.filter(a => a.isLate).length
+    totalLate: attendance.filter(a => a.isLate && a.clockIn).length
   };
 
   return (
